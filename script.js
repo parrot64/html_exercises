@@ -3,12 +3,12 @@ let ctx = null;
 let num = 0;
 const BACKROUND = "#FFFFFF"
 const FOREGROUND = "#000000";
-const WIDTH = 800;
-const HIEGHT = 600;
+const WIDTH = 1920;
+const HIEGHT = 1080;
 const S = 10;
 const fps = 120;
 const dt = 1/fps;
-let dz = 15;
+let dz = 20;
 let angle = 0;
 
 const vertixes = 
@@ -133,7 +133,29 @@ function movez(aPoint3D,aDeltaz)
         {
             x: aPoint3D.x,
             y: aPoint3D.y,
-            z: aPoint3D.z+aDeltaz
+            z: aPoint3D.z+aDeltaz,
+        };
+    return point3D;
+}
+
+function movey(aPoint3D,aDeltay)
+{
+    const point3D =
+        {
+            x: aPoint3D.x,
+            y: aPoint3D.y+aDeltay,
+            z: aPoint3D.z,
+        };
+    return point3D;
+}
+
+function movex(aPoint3D,aDeltax)
+{
+    const point3D =
+        {
+            x: aPoint3D.x+aDeltax,
+            y: aPoint3D.y,
+            z: aPoint3D.z,
         };
     return point3D;
 }
@@ -177,6 +199,9 @@ function animate()
 
             a = movey(a,-2);
             b = movey(b,-2);
+
+            a = movex(a,-1);
+            b = movex(b,-1);
 
             const aScr = converttocanvas(project3dto2d(a));
             const bScr = converttocanvas(project3dto2d(b));
