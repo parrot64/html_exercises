@@ -16,6 +16,10 @@ export default
             {
                 console: "readonly",
                 setTimeout: "readonly",
+                document: "readonly",
+                fs: "readonly",
+                vs: "readonly",
+                window: "readonly",
             },
         },
     },
