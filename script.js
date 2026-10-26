@@ -11,32 +11,32 @@ const dt = 1/fps;
 let dz = 15;
 let angle = 0;
 
-const vertixes = 
+const vertixes =
     [
-        {x: -1,y: 1,z: 1}, //0
-        {x: 1,y: 1,z: 1},//1
-        {x: 1,y: -1,z: 1},//2
-        {x: -1,y: -1,z: 1},
+        {x: -1,y: 1,z: 1,}, //0
+        {x: 1,y: 1,z: 1,},//1
+        {x: 1,y: -1,z: 1,},//2
+        {x: -1,y: -1,z: 1,},
 
-        {x: -1,y: 1,z: -1},
-        {x: 1,y: 1,z: -1},
-        {x: 1,y: -1,z: -1},
-        {x: -1,y: -1,z: -1},
+        {x: -1,y: 1,z: -1,},
+        {x: 1,y: 1,z: -1,},
+        {x: 1,y: -1,z: -1,},
+        {x: -1,y: -1,z: -1,},
     ];
 
-    const faces = 
+const faces =
     [
-        [0,1,2,3],
-        [4,5,6,7],
-        [0,4,7,3],
-        [1,5,6,2],
+        [0,1,2,3,],
+        [4,5,6,7,],
+        [0,4,7,3,],
+        [1,5,6,2,],
     ];
 
 function Buttonclick()
 {
     num++;
     console.log("hello");
-    // document find element by name 
+    // document find element by name
     const numLabel = document.getElementsByName("numLabel")[0];
     numLabel.textContent = num;
 }
@@ -60,9 +60,9 @@ function rotatexz(aPoint3D,angle)
 
     const point3D =
     {
-        x:aPoint3D.x*C-aPoint3D.z*S,
-        y:aPoint3D.y,
-        z:aPoint3D.x*S+aPoint3D.z*C
+        x: aPoint3D.x*C-aPoint3D.z*S,
+        y: aPoint3D.y,
+        z: aPoint3D.x*S+aPoint3D.z*C,
 
     };
 
@@ -76,9 +76,9 @@ function rotateyz(aPoint3D,angle)
 
     const point3D =
     {
-        x:aPoint3D.x,
-        y:aPoint3D.y*C-aPoint3D.z*S,
-        z:aPoint3D.y*S+aPoint3D.z*C
+        x: aPoint3D.x,
+        y: aPoint3D.y*C-aPoint3D.z*S,
+        z: aPoint3D.y*S+aPoint3D.z*C,
 
     };
 
@@ -92,9 +92,9 @@ function rotatexy(aPoint3D,angle)
 
     const point3D =
     {
-        x:aPoint3D.x*C-aPoint3D.y*S,
-        y:aPoint3D.x*S+aPoint3D.y*C,
-        z:aPoint3D.z
+        x: aPoint3D.x*C-aPoint3D.y*S,
+        y: aPoint3D.x*S+aPoint3D.y*C,
+        z: aPoint3D.z,
 
     };
 
@@ -113,16 +113,20 @@ function line(aPoint2D1,aPoint2D2)
 
 function project3dto2d(aPoint3D)
 {
-    const point2D = {x: aPoint3D.x/aPoint3D.z,y: aPoint3D.y/aPoint3D.z};
+    const point2D =
+        {
+            x: aPoint3D.x/aPoint3D.z,
+            y: aPoint3D.y/aPoint3D.z,
+        };
     return point2D;
 }
 
 function converttocanvas(aPoint2D)
 {
-    const point2D = 
+    const point2D =
         {
             x: ((aPoint2D.x+1)/2)*WIDTH,
-            y: (1-(aPoint2D.y+1)/2)*HIEGHT
+            y: (1-(aPoint2D.y+1)/2)*HIEGHT,
         };
     return point2D;
 }
@@ -133,7 +137,7 @@ function movez(aPoint3D,aDeltaz)
         {
             x: aPoint3D.x,
             y: aPoint3D.y,
-            z: aPoint3D.z+aDeltaz
+            z: aPoint3D.z+aDeltaz,
         };
     return point3D;
 }
@@ -187,7 +191,7 @@ function animate()
     setTimeout(animate,1000/fps);
 }
 
-function onload() 
+function onload()
 {
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
