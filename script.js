@@ -3,12 +3,12 @@ let ctx = null;
 let num = 0;
 const BACKROUND = "#FFFFFF"
 const FOREGROUND = "#000000";
-const WIDTH = 800;
-const HIEGHT = 600;
+const WIDTH = 1920;
+const HIEGHT = 1080;
 const S = 10;
 const fps = 120;
 const dt = 1/fps;
-let dz = 15;
+let dz = 20;
 let angle = 0;
 
 const vertixes =
@@ -113,11 +113,10 @@ function line(aPoint2D1,aPoint2D2)
 
 function project3dto2d(aPoint3D)
 {
-    const point2D =
-        {
-            x: aPoint3D.x/aPoint3D.z,
-            y: aPoint3D.y/aPoint3D.z,
-        };
+    const point2D = {
+        x: aPoint3D.x/aPoint3D.z,
+        y: aPoint3D.y/aPoint3D.z,
+    };
     return point2D;
 }
 
@@ -153,6 +152,69 @@ function movey(aPoint3D,aDeltay)
     return point3D;
 }
 
+function movex(aPoint3D,aDeltax)
+{
+    const point3D =
+        {
+            x: aPoint3D.x+aDeltax,
+            y: aPoint3D.y,
+            z: aPoint3D.z,
+        };
+    return point3D;
+}
+
+function translate3D(aPoint3D,aTranslation3D)
+{
+    const point3D =
+        {
+            x: aPoint3D.x+aTranslation3D.dx,
+            y: aPoint3D.y+aTranslation3D.dy,
+            z: aPoint3D.z+aTranslation3D.dz,
+        };
+    return point3D;
+}
+
+/*
+aModel: {fs: .., vs:...}
+aTranslation: {dx, dy, dz}
+*/
+function animatemodel(aModel,aTranslation3D,anAngle)
+{
+    for (let fIndex = 0; fIndex<aModel.fs.length; fIndex++)
+    {
+        const f = aModel.fs[fIndex];
+        for (let i = 0; i<f.length; i++)
+        {
+            let a = aModel.vs[f[i]];
+            let b = aModel.vs[f[(i+1)%f.length]];
+
+            a = rotateyz(a,0.5*Math.PI);
+            b = rotateyz(b,0.5*Math.PI);
+
+            a = rotatexz(a,anAngle);
+            b = rotatexz(b,anAngle);
+
+            a = movez(a,dz);
+            b = movez(b,dz);
+
+            a = movey(a,-2);
+            b = movey(b,-2);
+
+            a = movex(a,-1);
+            b = movex(b,-1);
+
+            a= translate3D(a,aTranslation3D);
+            b= translate3D(b,aTranslation3D);
+
+            const aScr = converttocanvas(project3dto2d(a));
+            const bScr = converttocanvas(project3dto2d(b));
+
+            line(aScr,bScr);
+        }
+    }
+
+}
+
 function animate()
 {
     // dz = dz+dt;
@@ -162,32 +224,16 @@ function animate()
     // {
     //      point(converttocanvas(project3dto2d(movez(v,dz))));
     // }
-    for (let fIndex = 0; fIndex<fs.length; fIndex++)
-    {
-        const f = fs[fIndex];
-        for (let i = 0; i<f.length; i++)
-        {
-            let a = vs[f[i]];
-            let b = vs[f[(i+1)%f.length]];
+    animatemodel({
+        fs: fs,
+        vs: vs,
+    }, {dx: 3,dy: 0,dz: 0,},angle);
 
-            a = rotateyz(a,0.5*Math.PI);
-            b = rotateyz(b,0.5*Math.PI);
+    animatemodel({
+        fs: fs,
+        vs: vs,
+    }, {dx: -3,dy: 0,dz: 0,},-angle+0.5*Math.PI)
 
-            a = rotatexz(a,angle);
-            b = rotatexz(b,angle);
-
-            a = movez(a,dz);
-            b = movez(b,dz);
-
-            a = movey(a,-2);
-            b = movey(b,-2);
-
-            const aScr = converttocanvas(project3dto2d(a));
-            const bScr = converttocanvas(project3dto2d(b));
-
-            line(aScr,bScr);
-        }
-    }
     setTimeout(animate,1000/fps);
 }
 
