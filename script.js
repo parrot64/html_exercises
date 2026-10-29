@@ -163,6 +163,17 @@ function movex(aPoint3D,aDeltax)
     return point3D;
 }
 
+function scale(aPoint3D,aScale3D)
+{
+    const point3D =
+        {
+            x: aPoint3D.x*aScale3D.x,
+            y: aPoint3D.y*aScale3D.y,
+            z: aPoint3D.z*aScale3D.z,
+        };
+    return point3D;
+}
+
 function translate3D(aPoint3D,aTranslation3D)
 {
     const point3D =
@@ -178,7 +189,7 @@ function translate3D(aPoint3D,aTranslation3D)
 aModel: {fs: .., vs:...}
 aTranslation: {dx, dy, dz}
 */
-function animatemodel(aModel,aTranslation3D,anAngle)
+function animatemodel(aModel,aTranslation3D,anAngle, doRotate)
 {
     for (let fIndex = 0; fIndex<aModel.fs.length; fIndex++)
     {
@@ -187,6 +198,15 @@ function animatemodel(aModel,aTranslation3D,anAngle)
         {
             let a = aModel.vs[f[i]];
             let b = aModel.vs[f[(i+1)%f.length]];
+
+            if (doRotate)
+            {
+                a = rotateyz(a,0.5*Math.PI);
+                b = rotateyz(b,0.5*Math.PI);
+
+                a = scale(a,{x: 0.5,y: 0.5,z: 0.5,})
+                b = scale(b,{x: 0.5,y: 0.5,z: 0.5,})
+            }
 
             a = rotatexz(a,anAngle);
             b = rotatexz(b,anAngle);
@@ -222,8 +242,8 @@ function animate()
     //      point(converttocanvas(project3dto2d(movez(v,dz))));
     // }
 
-    animatemodel(KnightHelm, {dx: 5,dy: 0,dz: 0,},angle);
-    animatemodel(DoubleAxe, {dx: -5,dy: 0,dz: 0,},angle);
+    animatemodel(KnightHelm, {dx: 5,dy: 0,dz: 0,},angle, false);
+    animatemodel(DoubleAxe, {dx: -5,dy: 0,dz: 0,},angle, true);
 
     // animatemodel({
     //     fs: fs,
