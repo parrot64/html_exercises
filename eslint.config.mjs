@@ -20,6 +20,7 @@ export default
                 fs: "readonly",
                 vs: "readonly",
                 window: "readonly",
+                KnightHelm: "readonly",
             },
         },
     },
