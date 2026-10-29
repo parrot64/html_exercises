@@ -8,7 +8,7 @@ const HIEGHT = 1080;
 const S = 10;
 const fps = 120;
 const dt = 1/fps;
-let dz = 20;
+let dz = 15;
 let angle = 0;
 
 const vertixes =
@@ -188,9 +188,6 @@ function animatemodel(aModel,aTranslation3D,anAngle)
             let a = aModel.vs[f[i]];
             let b = aModel.vs[f[(i+1)%f.length]];
 
-            a = rotateyz(a,0.5*Math.PI);
-            b = rotateyz(b,0.5*Math.PI);
-
             a = rotatexz(a,anAngle);
             b = rotatexz(b,anAngle);
 
@@ -224,15 +221,14 @@ function animate()
     // {
     //      point(converttocanvas(project3dto2d(movez(v,dz))));
     // }
-    animatemodel({
-        fs: fs,
-        vs: vs,
-    }, {dx: 3,dy: 0,dz: 0,},angle);
 
-    animatemodel({
-        fs: fs,
-        vs: vs,
-    }, {dx: -3,dy: 0,dz: 0,},-angle+0.5*Math.PI)
+    animatemodel(KnightHelm, {dx: 5,dy: 0,dz: 0,},angle);
+    animatemodel(DoubleAxe, {dx: -5,dy: 0,dz: 0,},angle);
+
+    // animatemodel({
+    //     fs: fs,
+    //     vs: vs,
+    // }, {dx: -3,dy: 0,dz: 0,},-angle+0.5*Math.PI)
 
     setTimeout(animate,1000/fps);
 }
