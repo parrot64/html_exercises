@@ -130,39 +130,6 @@ function converttocanvas(aPoint2D)
     return point2D;
 }
 
-function movez(aPoint3D,aDeltaz)
-{
-    const point3D =
-        {
-            x: aPoint3D.x,
-            y: aPoint3D.y,
-            z: aPoint3D.z+aDeltaz,
-        };
-    return point3D;
-}
-
-function movey(aPoint3D,aDeltay)
-{
-    const point3D =
-        {
-            x: aPoint3D.x,
-            y: aPoint3D.y+aDeltay,
-            z: aPoint3D.z,
-        };
-    return point3D;
-}
-
-function movex(aPoint3D,aDeltax)
-{
-    const point3D =
-        {
-            x: aPoint3D.x+aDeltax,
-            y: aPoint3D.y,
-            z: aPoint3D.z,
-        };
-    return point3D;
-}
-
 function scale(aPoint3D,aScale3D)
 {
     const point3D =
@@ -211,20 +178,19 @@ function animatemodel(aModel,aTranslation3D,anAngle, doRotate)
             a = rotatexz(a,anAngle);
             b = rotatexz(b,anAngle);
 
-            a = movez(a,dz);
-            b = movez(b,dz);
-
-            a = movey(a,-2);
-            b = movey(b,-2);
-
-            a = movex(a,-1);
-            b = movex(b,-1);
+            a= translate3D(a,{dx: -1,dy: -2,dz: dz,});
+            b= translate3D(b,{dx: -1,dy: -2,dz: dz,});
 
             a= translate3D(a,aTranslation3D);
             b= translate3D(b,aTranslation3D);
 
             const aScr = converttocanvas(project3dto2d(a));
             const bScr = converttocanvas(project3dto2d(b));
+
+            /*
+            aModel.transformPoint(a)
+            aModel.transformPoint(b)
+             */
 
             line(aScr,bScr);
         }
@@ -258,7 +224,12 @@ function onload()
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
     // line({x:10,y:110},{x:10,y:50});
+    // KnightHelm.transformPoint =
+    //     (aPoint3d) =>
+    //     {
+    //         aPoint3d.move.rotate.translate.convert.
 
+    //     }
 
     setTimeout(animate,1000/fps);
 }
