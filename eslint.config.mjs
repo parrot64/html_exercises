@@ -21,6 +21,7 @@ export default
                 vs: "readonly",
                 window: "readonly",
                 KnightHelm: "readonly",
+                DoubleAxe: "readonly",
             },
         },
     },

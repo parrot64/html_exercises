@@ -53,54 +53,6 @@ function point(apoint2D)
     ctx.fillRect(apoint2D.x-S/2,apoint2D.y-S/2,S,S);
 }
 
-function rotatexz(aPoint3D,angle)
-{
-    const C = Math.cos(angle);
-    const S = Math.sin(angle);
-
-    const point3D =
-    {
-        x: aPoint3D.x*C-aPoint3D.z*S,
-        y: aPoint3D.y,
-        z: aPoint3D.x*S+aPoint3D.z*C,
-
-    };
-
-    return point3D;
-}
-
-function rotateyz(aPoint3D,angle)
-{
-    const C = Math.cos(angle);
-    const S = Math.sin(angle);
-
-    const point3D =
-    {
-        x: aPoint3D.x,
-        y: aPoint3D.y*C-aPoint3D.z*S,
-        z: aPoint3D.y*S+aPoint3D.z*C,
-
-    };
-
-    return point3D;
-}
-
-function rotatexy(aPoint3D,angle)
-{
-    const C = Math.cos(angle);
-    const S = Math.sin(angle);
-
-    const point3D =
-    {
-        x: aPoint3D.x*C-aPoint3D.y*S,
-        y: aPoint3D.x*S+aPoint3D.y*C,
-        z: aPoint3D.z,
-
-    };
-
-    return point3D;
-}
-
 function line(aPoint2D1,aPoint2D2)
 {
     ctx.lineWidth = 3
@@ -109,47 +61,6 @@ function line(aPoint2D1,aPoint2D2)
     ctx.moveTo(aPoint2D1.x,aPoint2D1.y);
     ctx.lineTo(aPoint2D2.x,aPoint2D2.y);
     ctx.stroke();
-}
-
-function project3dto2d(aPoint3D)
-{
-    const point2D = {
-        x: aPoint3D.x/aPoint3D.z,
-        y: aPoint3D.y/aPoint3D.z,
-    };
-    return point2D;
-}
-
-function converttocanvas(aPoint2D)
-{
-    const point2D =
-        {
-            x: ((aPoint2D.x+1)/2)*WIDTH,
-            y: (1-(aPoint2D.y+1)/2)*HIEGHT,
-        };
-    return point2D;
-}
-
-function scale(aPoint3D,aScale3D)
-{
-    const point3D =
-        {
-            x: aPoint3D.x*aScale3D.x,
-            y: aPoint3D.y*aScale3D.y,
-            z: aPoint3D.z*aScale3D.z,
-        };
-    return point3D;
-}
-
-function translate3D(aPoint3D,aTranslation3D)
-{
-    const point3D =
-        {
-            x: aPoint3D.x+aTranslation3D.dx,
-            y: aPoint3D.y+aTranslation3D.dy,
-            z: aPoint3D.z+aTranslation3D.dz,
-        };
-    return point3D;
 }
 
 /*
@@ -163,36 +74,39 @@ function animatemodel(aModel,aTranslation3D,anAngle, doRotate)
         const f = aModel.fs[fIndex];
         for (let i = 0; i<f.length; i++)
         {
-            let a = aModel.vs[f[i]];
-            let b = aModel.vs[f[(i+1)%f.length]];
+            let a = new Point(aModel.vs[f[i]]);
+            let b = new Point(aModel.vs[f[(i+1)%f.length]]);
 
             if (doRotate)
             {
-                a = rotateyz(a,0.5*Math.PI);
-                b = rotateyz(b,0.5*Math.PI);
+                a.rotateyz(0.5*Math.PI);
+                b.rotateyz(0.5*Math.PI);
 
-                a = scale(a,{x: 0.5,y: 0.5,z: 0.5,})
-                b = scale(b,{x: 0.5,y: 0.5,z: 0.5,})
+                a.scale({x: 0.5,y: 0.5,z: 0.5,})
+                b.scale({x: 0.5,y: 0.5,z: 0.5,})
             }
 
-            a = rotatexz(a,anAngle);
-            b = rotatexz(b,anAngle);
+            a.rotatexz(anAngle);
+            b.rotatexz(anAngle);
 
-            a= translate3D(a,{dx: -1,dy: -2,dz: dz,});
-            b= translate3D(b,{dx: -1,dy: -2,dz: dz,});
+            a.translate3D({x: -1,y: -2,z: dz,});
+            b.translate3D({x: -1,y: -2,z: dz,});
 
-            a= translate3D(a,aTranslation3D);
-            b= translate3D(b,aTranslation3D);
+            a.translate3D(aTranslation3D);
+            b.translate3D(aTranslation3D);
 
-            const aScr = converttocanvas(project3dto2d(a));
-            const bScr = converttocanvas(project3dto2d(b));
+            a.project3dto2d();
+            b.project3dto2d();
+
+            a.converttocanvas(WIDTH,HIEGHT);
+            b.converttocanvas(WIDTH,HIEGHT);
 
             /*
             aModel.transformPoint(a)
             aModel.transformPoint(b)
              */
 
-            line(aScr,bScr);
+            line(a,b);
         }
     }
 
@@ -208,8 +122,8 @@ function animate()
     //      point(converttocanvas(project3dto2d(movez(v,dz))));
     // }
 
-    animatemodel(KnightHelm, {dx: 5,dy: 0,dz: 0,},angle, false);
-    animatemodel(DoubleAxe, {dx: -5,dy: 0,dz: 0,},angle, true);
+    animatemodel(KnightHelm, {x: 5,y: 0,z: 0,},angle, false);
+    animatemodel(DoubleAxe, {x: -5,y: 0,z: 0,},angle, true);
 
     // animatemodel({
     //     fs: fs,
@@ -223,7 +137,7 @@ function onload()
 {
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
-    // line({x:10,y:110},{x:10,y:50});
+
     // KnightHelm.transformPoint =
     //     (aPoint3d) =>
     //     {
