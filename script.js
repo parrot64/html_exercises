@@ -11,27 +11,6 @@ const dt = 1/fps;
 let dz = 15;
 let angle = 0;
 
-const vertixes =
-    [
-        {x: -1,y: 1,z: 1,}, //0
-        {x: 1,y: 1,z: 1,},//1
-        {x: 1,y: -1,z: 1,},//2
-        {x: -1,y: -1,z: 1,},
-
-        {x: -1,y: 1,z: -1,},
-        {x: 1,y: 1,z: -1,},
-        {x: 1,y: -1,z: -1,},
-        {x: -1,y: -1,z: -1,},
-    ];
-
-const faces =
-    [
-        [0,1,2,3,],
-        [4,5,6,7,],
-        [0,4,7,3,],
-        [1,5,6,2,],
-    ];
-
 function Buttonclick()
 {
     num++;
@@ -77,14 +56,12 @@ function animatemodel(aModel,aTranslation3D,anAngle)
             let a = new Point(aModel.vs[f[i]]);
             let b = new Point(aModel.vs[f[(i+1)%f.length]]);
 
-
             aModel.transformPoint(a,anAngle,aTranslation3D);
             aModel.transformPoint(b,anAngle,aTranslation3D);
 
             line(a,b);
         }
     }
-
 }
 
 function animate()
@@ -92,18 +69,10 @@ function animate()
     // dz = dz+dt;
     angle = angle + Math.PI * dt;
     clear();
-    // for (const v of vertixes)
-    // {
-    //      point(converttocanvas(project3dto2d(movez(v,dz))));
-    // }
 
-    animatemodel(KnightHelm, {x: 5,y: 0,z: 0,},angle);
-    animatemodel(DoubleAxe, {x: -5,y: 0,z: 0,},angle);
-
-    // animatemodel({
-    //     fs: fs,
-    //     vs: vs,
-    // }, {dx: -3,dy: 0,dz: 0,},-angle+0.5*Math.PI)
+    animatemodel(KnightHelm, {x: 10,y: 0,z: 0,},angle);
+    animatemodel(DoubleAxe, {x: -10,y: 0,z: 0,},angle);
+    animatemodel(BigSword, {x: 0,y: 3,z: 0,},angle);
 
     setTimeout(animate,1000/fps);
 }
@@ -130,13 +99,25 @@ function onload()
                 aPoint3d
                     .rotateyz(0.5*Math.PI)
                     .scale({x: 0.5,y: 0.5,z: 0.5,})
-                    .rotatexz(anAngle)
+                    .rotatexz(-2*anAngle)
                     .translate3D({x: -1,y: -2,z: dz,})
                     .translate3D(aTranslation3D)
                     .project3dto2d()
                     .converttocanvas(WIDTH,HIEGHT);
+            };
 
-            }
+    BigSword.transformPoint =
+            (aPoint3d,anAngle,aTranslation3D) =>
+            {
+                aPoint3d
+                    .rotateyz(Math.PI)
+                    .scale({x: 0.8,y: 1,z: 0.8,})
+                    .rotatexz(-anAngle)
+                    .translate3D({x: -1,y: -2,z: dz,})
+                    .translate3D(aTranslation3D)
+                    .project3dto2d()
+                    .converttocanvas(WIDTH,HIEGHT);
+            };
 
     setTimeout(animate,1000/fps);
 }

@@ -32,7 +32,6 @@ class Point
         this.y = y*C - z*S;
         this.z = y*S + z*C;
 
-
         return this;
     }
 
@@ -70,7 +69,6 @@ class Point
 
     project3dto2d()
     {
-
         this.x = this.x/this.z;
         this.y = this.y/this.z;
 
@@ -79,13 +77,9 @@ class Point
 
     converttocanvas(aWidth,aHeight)
     {
-
         this.x = ((this.x + 1)/2)*aWidth;
         this.y =  (1 - (this.y + 1)/2)*aHeight;
 
         return this;
     }
-
-
-
 }
