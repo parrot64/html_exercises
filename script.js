@@ -67,7 +67,7 @@ function line(aPoint2D1,aPoint2D2)
 aModel: {fs: .., vs:...}
 aTranslation: {dx, dy, dz}
 */
-function animatemodel(aModel,aTranslation3D,anAngle, doRotate)
+function animatemodel(aModel,aTranslation3D,anAngle)
 {
     for (let fIndex = 0; fIndex<aModel.fs.length; fIndex++)
     {
@@ -77,34 +77,9 @@ function animatemodel(aModel,aTranslation3D,anAngle, doRotate)
             let a = new Point(aModel.vs[f[i]]);
             let b = new Point(aModel.vs[f[(i+1)%f.length]]);
 
-            if (doRotate)
-            {
-                a.rotateyz(0.5*Math.PI);
-                b.rotateyz(0.5*Math.PI);
 
-                a.scale({x: 0.5,y: 0.5,z: 0.5,})
-                b.scale({x: 0.5,y: 0.5,z: 0.5,})
-            }
-
-            a.rotatexz(anAngle);
-            b.rotatexz(anAngle);
-
-            a.translate3D({x: -1,y: -2,z: dz,});
-            b.translate3D({x: -1,y: -2,z: dz,});
-
-            a.translate3D(aTranslation3D);
-            b.translate3D(aTranslation3D);
-
-            a.project3dto2d();
-            b.project3dto2d();
-
-            a.converttocanvas(WIDTH,HIEGHT);
-            b.converttocanvas(WIDTH,HIEGHT);
-
-            /*
-            aModel.transformPoint(a)
-            aModel.transformPoint(b)
-             */
+            aModel.transformPoint(a,anAngle,aTranslation3D);
+            aModel.transformPoint(b,anAngle,aTranslation3D);
 
             line(a,b);
         }
@@ -122,8 +97,8 @@ function animate()
     //      point(converttocanvas(project3dto2d(movez(v,dz))));
     // }
 
-    animatemodel(KnightHelm, {x: 5,y: 0,z: 0,},angle, false);
-    animatemodel(DoubleAxe, {x: -5,y: 0,z: 0,},angle, true);
+    animatemodel(KnightHelm, {x: 5,y: 0,z: 0,},angle);
+    animatemodel(DoubleAxe, {x: -5,y: 0,z: 0,},angle);
 
     // animatemodel({
     //     fs: fs,
@@ -138,12 +113,30 @@ function onload()
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
 
-    // KnightHelm.transformPoint =
-    //     (aPoint3d) =>
-    //     {
-    //         aPoint3d.move.rotate.translate.convert.
+    KnightHelm.transformPoint =
+        (aPoint3d,anAngle,aTranslation3D) =>
+        {
+            aPoint3d
+                .rotatexz(anAngle)
+                .translate3D({x: -1,y: -2,z: dz,})
+                .translate3D(aTranslation3D)
+                .project3dto2d()
+                .converttocanvas(WIDTH,HIEGHT);
+        };
 
-    //     }
+    DoubleAxe.transformPoint =
+            (aPoint3d,anAngle,aTranslation3D) =>
+            {
+                aPoint3d
+                    .rotateyz(0.5*Math.PI)
+                    .scale({x: 0.5,y: 0.5,z: 0.5,})
+                    .rotatexz(anAngle)
+                    .translate3D({x: -1,y: -2,z: dz,})
+                    .translate3D(aTranslation3D)
+                    .project3dto2d()
+                    .converttocanvas(WIDTH,HIEGHT);
+
+            }
 
     setTimeout(animate,1000/fps);
 }

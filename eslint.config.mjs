@@ -22,6 +22,7 @@ export default
                 window: "readonly",
                 KnightHelm: "readonly",
                 DoubleAxe: "readonly",
+                Point: "readonly",
             },
         },
     },
